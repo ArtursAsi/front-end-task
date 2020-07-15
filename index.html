@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="output.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://unpkg.com/vuex"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
+    <script src="signInValidation.js"></script>
+    <title>Figma</title>
+</head>
+
+<body>
+<div class="container">
+    <div class="row justify-content-center">
+        <div id="sign-in-status">Signed in successfully</div>
+        <div id="sign-up-status">You have successfully signed up</div>
+        <button class="sign_in m-1" data-toggle="modal" data-target="#signInModal">Sign in</button>
+        <button class="sign_up m-1" data-toggle="modal" data-target="#signUpModal">Sign up</button>
+
+    </div>
+</div>
+
+<div class="modal sign_in_modal" tabindex="-1" role="dialog" id="signInModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <h5 class="modal-title ">Sign in</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="sign_in_text">You can sign in using your DiscoverCars account to access our services.</p>
+            </div>
+            <form action="#" class="ml-4" id="sign-in-form" method="post" name="sign_in_form">
+                <label for="sign_in_email" class="sign_in_email ">Email address</label>
+                <input type="email" id="sign_in_email" name="email" required>
+                <label for="sing_in_password" class="sing_in_password mt-3 ">Password</label>
+                <input type="password" id="sing_in_password" name="password" required>
+                <button type="submit" class="sign-in-button mt-3" id="sign_in_button" onsubmit="signInSnackbar()">Sign in
+                </button>
+            </form>
+            <a class="forgot_password m-4" href="#">Forgot password?</a>
+            <div class="modal-footer">
+                <div class="row justify-content-center">
+                    <p class="footer-text">Don't have an account yet? <a class="footer-href" href="#"
+                                                                         data-toggle="modal" data-dismiss="modal"
+                                                                         data-target="#signUpModal">Sign up</a></p>
+
+                    <span class="terms">By proceeding, you agree to our <a href="#"
+                                                                           class="terms_of_use">Terms of Use</a> and confirm you have read our <a
+                            href="#" class="privacy_policy">Privacy Policy</a>.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal sign_up_modal" tabindex="-1" role="dialog" id="signUpModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <h5 class="modal-title">Create your account</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="sign_up_text">Create an account to use DiscoverCars services easily.</p>
+            </div>
+
+            <form action="#" method="post" id="sing-up-form" class="ml-4">
+                <ul class="sign_up_errors" v-for="error in errors">
+                    <li>
+                        {{error}}
+                    </li>
+                </ul>
+
+                <label for="sign_up_email" class="sign_up_email mb-1">Email address</label>
+                <input type="email" id="sign_up_email" v-model="email" name="email">
+
+                <label for="sing_up_password" class="sing_up_password mt-3 mb-1">Password</label>
+                <input type="password" id="sing_up_password" minlength="6" v-model="password" name="password">
+                <p class="symbols mb-3 mt-2">Must be at least 6 symbols</p>
+                <button type="submit" class="get-started-button mb-4 " onsubmit="signUpSnackbar()" @click="checkForm">Get started</button>
+            </form>
+            <div class="modal-footer">
+                <div class="row justify-content-center">
+                    <p class="footer-text">Already have an account? <a class="footer-href" href="#" data-toggle="modal"
+                                                                       data-dismiss="modal" data-target="#signInModal">Sign
+                        in</a></p>
+
+                    <span class="terms">By proceeding, you agree to our <a href="#"
+                                                                           class="terms_of_use">Terms of Use</a> and confirm you have read our <a
+                            href="#" class="privacy_policy">Privacy Policy</a>.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+
+
+    function signInSnackbar() {
+        var signIn = document.getElementById("sign-in-status");
+
+        signIn.className = "show";
+        setTimeout(function () {
+            signIn.className = signIn.className.replace("show", "");
+        }, 5000);
+
+    }
+
+
+    function signUpSnackbar() {
+        var signUp = document.getElementById("sign-up-status");
+
+        signUp.className = "show";
+        setTimeout(function () {
+            signUp.className = signUp.className.replace("show", "");
+        }, 5000);
+    }
+
+
+    $('#myModal').on('shown.bs.modal', function () {
+        $('#myInput').trigger('focus')
+    })
+
+    var app = new Vue({
+        el: "#sing-up-form",
+        data: {
+            errors: [],
+            email: null,
+            password: null
+        },
+        methods: {
+            checkForm: function (e) {
+                if (this.email && this.password) {
+                    return true;
+                }
+
+                this.errors = [];
+
+                if (!this.email) {
+                    this.errors.push('Email required.');
+                }
+                if (!this.password) {
+                    this.errors.push('Password required.');
+                } else if (this.password.length < 6) {
+                    this.errors.push('Password must be at least 6 symbols')
+                }
+                e.preventDefault();
+            }
+        }
+    });
+</script>
+</body>
+</html>
